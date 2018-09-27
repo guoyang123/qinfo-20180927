@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="com.neuedu.dao.QinfoMapper">
+
+  
+  <!-- 添加用户 -->
+  <insert id="save" parameterType="qinfo" >
+     
+     insert into qinfo(qno,qtitle,qdesc,userid,createtime) values(#{qno},#{qtitle},#{qdesc},#{userid},now())
+  </insert>
+
+
+    <resultMap id="qnoResultMap" type="qinfo">
+       <id column="id" property="id"/>
+        <result column="qno" property="qno"/>
+        <result column="qtitle" property="qtitle"/>
+        <result column="qdesc" property="qdesc"/>
+        <collection property="questionList" ofType="que" column="qno" autoMapping="true">
+        </collection>
+    </resultMap>
+
+    <!--根据qno查询整个问卷内容-->
+    <select id="findByQno" parameterType="java.lang.String" resultMap="qnoResultMap">
+        select info.id, info.qno ,info.qtitle,info.qdesc,que.qid,que.title,que.qtype from qinfo info
+        left join question que
+        on info.qno=que.qno
+        where info.qno=#{qno}
+    </select>
+
+    <!--根据用户id查询出该用户所创建的所有问卷-->
+    <select id="findAllByUserId" parameterType="int" resultType="qinfo">
+      select id, qno,qtitle from qinfo where userid=#{userid} order by id DESC
+    </select>
+
+    <!--修改题量参数-->
+    <select id="updateTotalQ" parameterType="qinfo" resultType="java.lang.Integer">
+        update qinfo set totalQ=#{totalQ} where qno=#{qno}
+
+    </select>
+
+</mapper>

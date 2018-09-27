@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" ></script>
+		<script type="text/javascript" th:src="@{/js/jquery.qrcode.min.js}" ></script>
+		<script type="text/javascript" th:src="@{/js/qdetail.js}" ></script>
+		<script type="text/javascript" th:src="@{/js/clipboard.min.js}"></script>
+		<link rel="stylesheet" th:href="@{/css/qdetail.css}">
+
+		<style>
+
+		    
+		</style>
+	</head>
+	<body>
+		
+		<div class="main-container">
+		<div class="nav-bar">
+			<div class="ui-sidebar">
+				<!--<a href="home" class="return-wrapper">
+					<em class="icon return-icon"></em>
+					<span>创建问卷</span>
+				</a>-->
+				<a class="nav-items" href="home">
+					<div class="items-box">
+						<i class="icon return-icon"></i>
+						<span>创建问卷</span>
+					</div>
+				</a>
+				<a class="nav-items" th:href="@{skip}"
+				   target="showcontent" id="nav-items-recycling">
+					<div class="items-box">
+						<i class="icon recycling"></i>
+						<span>发送问卷</span>
+					</div>
+				</a>
+
+				<a class="nav-items" href="http://gsmzzk.com:8080/back/1527812674200/download"
+
+				    target="showcontent"
+				   id="nav-items-analysis">
+					<div class="items-box">
+						<i class="icon analysis"></i>
+						<span>下载&分析</span>
+					</div>
+				</a>
+				<a></a>
+			</div>
+			
+		</div>
+		<div class="inside-wrapper">
+			
+		<div class="inside-header">
+			
+			<div class="_select_wrap">
+				<select class="_select">
+					<option    th:each="info,infostate:${session.qinfos}"
+							   th:value="${info.qno}"
+							   th:text="${info.qtitle}"
+					           th:selected="${info.select}?true:false"
+					           >
+					</option>
+					</select>
+			</div>
+
+
+			<!--初始化二维码信息-->
+			<script >
+				window.onload=function () {
+                    var _qno=$("._select option[selected='selected']").val();
+                    var _qinfo="http://gsmzzk.com:8080/front/generate/"+_qno;
+                    $( document.getElementById("external-frame").contentWindow.document.getElementsByClassName("_link")[0]).val(_qinfo);
+                    $( document.getElementById("external-frame").contentWindow.document.getElementById("qrcode")).html("");
+                    $( document.getElementById("external-frame").contentWindow.document.getElementById("qrcode")).qrcode(
+                        {width: 140,height: 140,correctLevel:0,text: _qinfo}
+                    );
+				}
+			</script>
+		</div>
+		<div class="inside-main">
+			<div style="width: 1px; height: 1px;"></div>
+
+			
+			<iframe th:src="@{skip}" name="showcontent"
+					id="external-frame" class="box" border="0px"
+					frameborder="0px"></iframe>
+		</div>
+		</div>
+		</div>
+		
+	
+		
+	
+	</body>
+</html>
+
+
